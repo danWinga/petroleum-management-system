@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+      
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+        .ui-widget,
+        .ui-widget .ui-widget {
+               font-size: 12px !important;
+         }
+    </style>
+
+
+        <p:poll interval="15" listener="#{requests.printing}" update=":form1:dataTableInbox" />
+        
+        <p:dataTable var="req" value="#{requests.inboxList}" id="dataTableInbox"
+                paginator="true" rows="50" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                filteredValue="#{requests.filteredList}" widgetVar="reqTable1">
+
+                    <f:facet name="header">  
+                            <p:outputPanel>  
+                                <h:outputText value="Inbox SMS" />
+                            </p:outputPanel>  
+                    </f:facet> 
+                    <p:column style="width:5%">  
+                            <h:outputText styleClass="ui-icon ui-icon-mail-closed" />  
+                    </p:column> 
+                    <p:column style="width:20%" sortBy="#{req.phonenumber}" headerText="Phone No" footerText="Phone No">  
+                            <h:outputText value="#{req.phonenumber}" /> 
+                    </p:column>  
+                    <p:column style="width:40%" sortBy="#{req.message}" headerText="Message" footerText="Message">  
+                            <h:outputText value="#{req.message}" />  
+                    </p:column>  
+                    <p:column style="width:15%" sortBy="#{req.smsdate}" headerText="Date" footerText="Date">  
+                            <h:outputText value="#{req.smsdate}" />  
+                    </p:column>  
+                    <p:column style="width:15%" sortBy="#{req.smstime}" headerText="Time" footerText="Time">  
+                            <h:outputText value="#{req.smstime}" />  
+                    </p:column>  
+
+        </p:dataTable>
+
+</html>

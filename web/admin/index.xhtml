@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+      
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" href="faces/admin/login-box.css" />
+
+    <h:head><title>LMIS</title></h:head>
+    <h:body>    
+            <h:form id="form">
+            <br />
+            <br />
+            <br />
+            <br />
+            <center>
+                <div><!-- style="padding: 100px 0 0 450px;"> -->
+                    <div id="login-box">
+
+                            <H2 align="left">KEMSA</H2>
+
+                            <div align="left"> LMIS - Logistic Management Information System</div>
+                            <br />
+                            <br />
+                            <div><h:outputText value="" style="color:yellow" /></div>
+                            <div id="login-box-name" style="margin-top:20px;">Login ID:</div>
+                            <div id="login-box-field" style="margin-top:20px;">
+                                <h:inputText id="loginname" styleClass="form-login" value="#{simplelogin.username}" title="User ID"  size="30" maxlength="2048"/>
+                            </div>
+                            <div id="login-box-name">Password:</div>
+                            <div id="login-box-field">
+                                <h:inputSecret id="password" value="#{simplelogin.password}" styleClass="form-login" title="Password" size="30" maxlength="2048" />
+                            </div>
+                            
+                            <br />
+                            
+                            <br />
+                            <br />
+                            <a href="#">Create Account</a>
+                            <p:commandButton icon="ui-icon-check" id="loginButton" image="/images/login-btn.png" value="Login" actionListener="#{simplelogin.login}" />
+                    </div>
+                </div>
+            </center>
+               
+            </h:form>
+    </h:body>
+</html>

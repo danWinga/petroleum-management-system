@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+      
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+        .ui-widget,
+        .ui-widget .ui-widget {
+               font-size: 12px !important;
+         }
+    </style>
+    <h:form id="newprice">
+        <h:panelGrid id="display2" columns="2" cellpadding="5">                  
+                <h:outputText value="Product:" />
+                <p:selectOneMenu id="productid" value="#{newprices.productId}">
+                        <f:selectItems id="products" value="#{comboboxes.products}"/>
+                </p:selectOneMenu>
+
+                <h:outputText value="Marketer:" />
+                <p:selectOneMenu id="marketerId" value="#{newprices.marketerId}">
+                        <f:selectItems id="marketers" value="#{comboboxes.marketers}"/>
+                </p:selectOneMenu>
+                
+                <h:outputText value="Location:" />
+                <p:selectOneMenu id="locationid" value="#{newprices.locationId}">
+                        <f:selectItems id="locations" value="#{comboboxes.locations}"/>
+                </p:selectOneMenu>
+                
+                <h:outputText value="Price:" />
+                <h:inputText id="price" size="40" value="#{newprices.price}" />
+                
+                <h:outputText value="Details:" />
+                <h:inputTextarea id="details" value="#{newprices.details}" rows="4" cols="40"/>
+                <f:facet name="footer">  
+                            <p:separator/>
+                            <div align="right">
+                                    <p:commandButton  process="newprice" id="loginButton" icon="ui-icon-disk" value="Save" actionListener="#{newprices.updateData}" update=":form1:prices:d4444" action="#{prices.refresh()}" oncomplete="PF('dlg6').hide();"/>
+                                    <p:commandButton value="Close" icon="ui-icon-close" oncomplete="PF('dlg6').hide();"/>
+                            </div>
+                </f:facet>
+        </h:panelGrid>
+    </h:form>
+</html>
+

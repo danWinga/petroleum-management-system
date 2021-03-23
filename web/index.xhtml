@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui">
+      
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link rel="stylesheet" type="text/css" href="newcss.css"/>
+
+    <style type="text/css">
+        .ui-widget,
+        .ui-widget .ui-widget {
+                font-size: 12px !important;
+        }
+        .ui-datatable .ui-column-filter {
+                display: block;
+                width:50px;
+                margin:auto;
+        }
+        .ui-datatable-tablewrapper {
+                overflow-x: auto;
+        }
+    </style>
+    <h:head><title>.::Blue Technologies Ltd</title></h:head>
+    
+    <p:idleMonitor rendered="#{simplelogin.display}" timeout="360000">
+            <p:ajax event="idle" listener="#{simplelogin.logout}" /> 
+    </p:idleMonitor> 
+    <h:body style="background-color: #ccc;">
+       
+            <h:form id="form1">
+                    <p:growl id="growl" showDetail="true" sticky="false" life="15000" />
+
+                    <p:dialog header="Advertisment" resizable="false" widgetVar="idleDialog" modal="true"> <!-- width="520"> -->
+                            <p:graphicImage width="32" height="32" value="/images/fuel-tanker.png" alt="Image Description for" title="LMIS"/> 
+                    </p:dialog>
+
+                    <h:form id="form2">
+                            <center>
+                                    <p:panel style="box-shadow: 10px 10px 5px #888888; width:  300px ; margin-top: 10%; bottom: auto;" rendered="#{not simplelogin.display}">
+                                            <h:panelGrid columns="1" >
+                                                    <h:outputText style="color:green; font-size: 25px; font-weight: bolder" value="M-FUEL" />
+                                            </h:panelGrid>
+
+                                            <h:panelGrid columns="1" cellspacing="10" cellpadding="10">
+                                                    <h:outputLabel value="E-mail Address:" />
+                                                    <h:inputText value="#{simplelogin.username}" required="true" requiredMessage="Please Enter email address!" label="username" />
+                                                    <h:outputLabel value="Password:" />
+                                                    <h:inputSecret value="#{simplelogin.password}" required="true" requiredMessage="Please Enter password!" label="password" />
+                                                    <f:facet name="footer">
+                                                            <p:commandButton update=":form1:growl" icon="ui-icon-key" id="loginButton" type="submit" value="Login" actionListener="#{simplelogin.login}"/>
+                                                            <p:spacer/><p:spacer/><p:spacer/><p:spacer/>
+                                                            <p:commandButton update=":form1:growl" icon="ui-icon-key" value="Forgot"/>
+                                                    </f:facet>
+                                            </h:panelGrid>
+                                    </p:panel>
+                            </center>
+                    </h:form>
+
+                    <p:poll interval="5" global="false" update=":form1:neworderid, :form1:acceptedid, :form1:rejectedid" /> 
+                    
+                    <p:layout fullPage="true" rendered="#{simplelogin.display}">
+                            <p:layoutUnit position="north" size="11%" style="box-shadow: 10px 10px 5px #888888; background-color: #ccc;" >
+                                    <p:outputPanel rendered="#{navigation.roleID}">
+                                    <div class='fluid'>
+                                            <header class='header clearfix'>
+                                                    <span class='logo'></span>
+                                                    
+                                                    <section class='top-nav last'>
+                                                            <li>New Orders<span class='rednum'><h:outputText id="neworderid" value="#{navigation.getOrderNumber(1)}" /></span></li>
+                                                            <li>Accepted<span class='rednum'><h:outputText id="acceptedid" value="#{navigation.getOrderNumber(2)}" /></span></li>
+                                                            <li>Declined<span class='rednum'><h:outputText id="rejectedid" value="#{navigation.getOrderNumber(3)}" /></span></li>
+                                                            <li><p:commandLink value="Logout" actionListener="#{simplelogin.logout}"/></li>
+                                                    </section>
+                                            </header>
+                                    </div>
+                                    </p:outputPanel>
+                                    
+                            </p:layoutUnit>
+                        
+                            <p:layoutUnit position="south" size="8%" style="border: 0px;">
+
+                            </p:layoutUnit>
+
+                            <p:layoutUnit style="box-shadow: 10px 10px 5px #888888; background-color: #ccc;" position="west" size="14%" resizable="false" closable="false" collapsible="false">
+                                    <center>
+                                        <br />
+                                        <c:if test="#{navigation.marketerLogo == '0'}">
+                                                <p:graphicImage height="80" width="160" value="/images/blue_logo.gif"/>
+                                        </c:if>
+                                        <c:if test="#{navigation.marketerLogo != '0'}">
+                                                <p:graphicImage height="80" width="160" value="DisplayImage?id=#{navigation.marketerLogo}" />
+                                        </c:if>
+                                        <br />
+                                        <br />
+                                    </center>
+
+                                    <ui:include id="menid" src="/templete/menu.xhtml" />
+
+                            </p:layoutUnit>
+
+                            <p:layoutUnit style="box-shadow: 10px 10px 5px #888888; background-color: #ccc;" position="east" size="25%" resizable="false" closable="false" collapsible="false">                               
+                                        <p:panel id="chatPanel" style="border: 0px;" >
+                                                <ui:include src="#{navigation.graphName}.xhtml" />
+                                        </p:panel>
+                            </p:layoutUnit>
+                            
+                            <p:layoutUnit style="box-shadow: 10px 10px 5px #888888; background-color: #ccc; " position="center" id="centerPanelx">
+                                    <p:panel id="centerPanel" style="height: 48%; border: 0px;" >
+                                            <ui:include src="#{navigation.pageName}.xhtml" />
+                                    </p:panel>
+                            </p:layoutUnit>
+                    </p:layout>
+            </h:form>
+        
+    </h:body>
+</html>
+

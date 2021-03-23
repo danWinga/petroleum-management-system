@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+      
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <f:facet name="first" >
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" /> 
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </f:facet>
+    <style type="text/css">
+        .ui-widget,
+        .ui-widget .ui-widget {
+               font-size: 12px !important;
+         }
+    </style>
+
+    <p:dataTable var="mar" value="#{marketers.marketerList}" id="mark"
+            paginator="true" rows="50" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+            rowsPerPageTemplate="10,20,30,40,50,60,70,80,100," widgetVar="marketersTable">
+
+                <f:facet name="header">  
+                        <p:outputPanel>
+                            <h:outputText value="Marketers" />
+                            <p:separator/>
+                            <div align="right">
+                                <p:commandButton value="New Marketer" onclick="PF('dlg4').show();" />
+                            </div>
+                        </p:outputPanel>
+                </f:facet> 
+                <p:column style="width:10%">  
+                        <h:outputText id="dragIcon" styleClass="ui-icon ui-icon-note" />  
+                </p:column> 
+                <p:column id="marketercode" style="width:20%" sortBy="#{mar.marketercode}" headerText="Code" footerText="Code">  
+                        <h:outputText value="#{mar.marketercode}" /> 
+                </p:column>  
+                <p:column id="txtmessage" style="width:50%" sortBy="#{mar.marketername}" headerText="Name" footerText="Name">  
+                        <h:outputText value="#{mar.marketername}" />  
+                </p:column>  
+                <p:column id="edit" headerText="Edit" style="width:10%" footerText="Edit">  
+                        <p:commandLink id="selectButton2" update=":form1:editmarketer:display2" styleClass="ui-icon ui-icon-pencil" oncomplete="PF('dlg3').show();">
+                                <f:setPropertyActionListener value="#{mar}" target="#{marketers.selectedMarketer}" />
+                        </p:commandLink>
+                </p:column>  
+                <p:column id="delete" headerText="Delete" style="width:10%" footerText="Edit">  
+                        <p:commandLink id="selectButton3"  update=":form1:editmarketer:display2" styleClass="ui-icon ui-icon-trash" oncomplete="PF('dlg5').show();" >
+                                <f:setPropertyActionListener value="#{mar}" target="#{marketers.selectedMarketer}" />
+                        </p:commandLink>
+                </p:column>  
+    </p:dataTable>
+    
+    <p:dialog header="Edit Marketer" widgetVar="dlg3" dynamic="true" showEffect="bounce" hideEffect="clip" resizable="false"> <!-- width="300" height="150">  -->
+            <p:graphicImage width="32" height="32" value="/images/fuel-tanker.png" alt="Image Description for" title="Blue Technologies"/> 
+            <p:separator/>
+            <h:form id="editmarketer">
+                <h:panelGrid id="display2" columns="2" cellpadding="5">
+                        <h:outputText value="Code:" />
+                        <h:inputText id="facilitycode" value="#{marketers.selectedMarketer.marketercode}" />
+                        <h:outputText value="Name:" />
+                        <h:inputText id="facilityname" value="#{marketers.selectedMarketer.marketername}" />
+                        <h:outputText value="Logo:" />
+                        <h:panelGrid columns="2" cellpadding="5">
+                                <h:graphicImage style="border: 0px;" value="DisplayImage?id=#{marketers.selectedMarketer.marketerId}" height="70" width="135"/>
+                                <p:commandLink title="Replace marketer's Logo" process="editmarketer" actionListener="#{marketers.selectedMarketer.sessionMarketer}" styleClass="ui-icon ui-icon-transferthick-e-w" update=":form1:upload3:updatelogo" oncomplete="PF('dlg3').hide(), PF('upload').show()" />
+                        </h:panelGrid>
+                        <h:outputText value="Details:" />
+                        <h:inputTextarea id="details" value="#{marketers.selectedMarketer.details}" rows="4" cols="40"/>
+                        <f:facet name="footer">
+                                <p:separator/>
+                                <div align="right">
+                                        <p:commandButton  process="editmarketer" id="loginButton" icon="ui-icon-disk" value="Save" actionListener="#{marketers.selectedMarketer.updateMarketer}" update=":form1:mark" oncomplete="PF('dlg3').hide();"/>
+                                        <p:commandButton value="Close" icon="ui-icon-close" oncomplete="PF('dlg3').hide();"/>
+                                </div>
+                        </f:facet>
+                </h:panelGrid>
+            </h:form>
+    </p:dialog>
+    
+    <p:dialog header="New Marketer" widgetVar="dlg4" dynamic="true" showEffect="bounce" hideEffect="clip" resizable="false"> <!-- width="300" height="150">  -->
+            <p:graphicImage width="32" height="32" value="/images/fuel-tanker.png" alt="Image Description for" title="Blue Technologies"/> 
+            <p:separator/>
+            <h:form id="newmarketer">
+                    <h:panelGrid id="display2" columns="2" cellpadding="5">                  
+                            <h:outputText value="Code:" />
+                            <h:inputText id="facilitycode" value="#{newmarketers.marketercode}" />
+                            <h:outputText value="Name:" />
+                            <h:inputText id="facilityname" value="#{newmarketers.marketername}" />
+                            <h:outputText value="Details:" />
+                            <h:inputTextarea id="details" value="#{newmarketers.details}" rows="6" cols="80"/>
+                            <f:facet name="footer">  
+                                    <p:separator/>
+                                    <div align="right">
+                                            <p:commandButton  process="newmarketer" id="newButton" icon="ui-icon-disk" value="Save" actionListener="#{newmarketers.newMarket}" update=":form1:mark" oncomplete="PF('dlg4').hide();"/>
+                                            <p:commandButton value="Close" icon="ui-icon-close" oncomplete="PF('dlg4').hide();"/>
+                                    </div>
+                            </f:facet>
+                    </h:panelGrid>
+            </h:form>
+    </p:dialog>
+    
+    <p:dialog header="Delete Marketer" widgetVar="dlg5" dynamic="true" showEffect="bounce" hideEffect="clip" resizable="false"> <!-- width="300" height="150">  -->
+            <p:graphicImage width="32" height="32" value="/images/fuel-tanker.png" alt="Image Description for" title="Blue Technologies"/> 
+            <p:separator/>
+            <h:form id="deletemarketer">
+                <h:panelGrid id="display2" >                  
+                    <h:outputText value="Are you sure you want to delete?" />
+                    <f:facet name="footer">  
+                            <p:separator/>
+                            <div align="right">
+                                    <p:commandButton  process="deletemarketer" id="loginButton" icon="ui-icon-trash" value="Delete" actionListener="#{marketers.selectedMarketer.deleteMarketer}" update=":form1:mark" oncomplete="PF('dlg5').hide();"/>
+                                    <p:commandButton value="Close" icon="ui-icon-close" oncomplete="PF('dlg5').hide();"/>
+                            </div>
+                    </f:facet>
+                </h:panelGrid>
+            </h:form>
+    </p:dialog>
+    
+    <p:dialog appendTo="@(body)" header="Logo" widgetVar="upload" dynamic="true" showEffect="fade" hideEffect="fade" resizable="false">
+            <h:form id="upload3">
+                    <h:panelGrid id="updatelogo" columns="1" cellpadding="5" >
+                            <h:outputText value="Upload a new Logo for #{marketers.selectedMarketer.marketername}"/>
+                            <p:fileUpload fileUploadListener="#{uploadImage.locationMap}" update=":form1:growl" oncomplete="PF('upload').hide();" multiple="false" mode="advanced" dragDropSupport="false" sizeLimit="100000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+                            <f:facet name="footer">
+                                    <p:separator />
+                                    <div align="right">
+                                            <p:commandButton value="Close" icon="ui-icon-close" oncomplete="PF('upload').hide();"/>
+                                    </div>
+                            </f:facet>
+                    </h:panelGrid>
+            </h:form>
+    </p:dialog>
+</html>

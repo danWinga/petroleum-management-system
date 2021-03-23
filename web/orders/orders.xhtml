@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"
+                                                                                                                               xmlns:ui="http://java.sun.com/jsf/facelets"
+                                                                                                                               xmlns:f="http://java.sun.com/jsf/core"
+                                                                                                                               xmlns:h="http://java.sun.com/jsf/html"
+                                                                                                                               xmlns:p="http://primefaces.org/ui"
+                                                                                                                               xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+        .ui-widget,
+        .ui-widget .ui-widget {
+            font-size: 12px !important;
+        }
+    </style>
+    <h:form id="orders">
+        <p:dataTable var="ord" value="#{orders.orderList}" id="orderlistId" paginator="true" rows="50" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                     rowsPerPageTemplate="10,20,30,40,50,60,70,80,100," widgetVar="ordTable" filteredValue="#{orders.filteredOrder}" >
+            <f:facet name="header">  
+                <p:outputPanel>  
+                    <h:outputText value="ORDERS" />
+                </p:outputPanel>  
+            </f:facet> 
+            <p:column style="width:5%"  footerText="Flag" >
+                <h:graphicImage width="13" height="12" url="#{ord.flag}"/>
+            </p:column>
+            <p:column style="width:15%" filterStyle="width:80px" filterMatchMode="exact" filterBy="#{ord.productId}" sortBy="#{ord.productName}" headerText="Product" footerText="Product">  
+                <f:facet name="filter">
+                    <p:selectOneMenu onchange="PF('ordTable').filter()" panelStyle="width:125px">
+                        <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
+                        <f:selectItems value="#{comboboxes.products}" />
+                    </p:selectOneMenu>
+                </f:facet>
+                <h:outputText value="#{ord.productCode} : #{ord.productName}" />  
+            </p:column>  
+            <p:column style="width:12%" filterStyle="width:40px" filterMatchMode="exact" filterBy="#{ord.locationId}" sortBy="#{ord.locationName}" headerText="Deport" footerText="Depot"> 
+                <f:facet name="filter">
+                    <p:selectOneMenu onchange="PF('ordTable').filter()" panelStyle="width:125px">
+                        <f:selectItem itemLabel="Select" itemValue="#{null}" noSelectionOption="true" />
+                        <f:selectItems value="#{comboboxes.locations}" />
+                    </p:selectOneMenu>
+                </f:facet>
+                <h:outputText value="#{ord.locationName}" />
+            </p:column>  
+            <!--<c:if test="#{navigation.admin == 'true'}">-->
+            <p:column style="width:15%" rendered="#{not navigation.marketer}" filterStyle="width:90px" filterMatchMode="contains" filterBy="#{ord.marketerId}" sortBy="#{ord.marketerName}" headerText="Marketer" footerText="Marketer"> 
+                <f:facet name="filter">
+                    <p:selectOneMenu onchange="PF('ordTable').filter()" panelStyle="width:135px">
+                        <f:selectItem itemLabel="Select One" itemValue="#{null}" noSelectionOption="true" />
+                        <f:selectItems value="#{comboboxes.marketers}" />
+                    </p:selectOneMenu>
+                </f:facet>
+                <h:outputText value="#{ord.marketerName}" /> 
+            </p:column>  
+            <!--</c:if>-->
+            <p:column style="width:10%" filterStyle="width:50px" filterMatchMode="contains" filterBy="#{ord.lrts}" sortBy="#{ord.lrts}" headerText="Qty" footerText="Qty">  
+                <h:outputText value="#{ord.lrts}" />  
+            </p:column>  
+            <p:column style="width:10%" filterStyle="width:50px" filterMatchMode="contains" filterBy="#{ord.orderPrice}" sortBy="#{ord.orderPrice}" headerText="Price" footerText="Price">  
+                <h:outputText value="#{ord.orderPrice}" />  
+            </p:column>
+            <p:column filterMatchMode="contains" filterStyle="width:50px" filterBy="#{ord.orderDate}" sortBy="#{ord.orderDate}" headerText="Date" footerText="Date">  
+                <h:outputText value="#{ord.orderDate}" />
+            </p:column>
+            <p:column style="width:15%" filterStyle="width:80px" rendered="#{navigation.marketer}" filterMatchMode="contains" filterBy="#{ord.fullName}" sortBy="#{ord.fullName}" headerText="Order By" footerText="Order By">  
+                <h:outputText value="#{ord.fullName}" />  
+            </p:column>
+            <p:column style="width:12%" filterStyle="width:50px" filterMatchMode="contains" filterBy="#{ord.orderStatus}" sortBy="#{ord.orderStatus}" headerText="Status" footerText="Status">  
+                <h:outputText value="#{ord.orderStatus}" />  
+            </p:column>
+            <p:column style="width:10%" footerText="More">  
+                <p:menuButton style="max-height: 10px;"  value="Opt">
+                    <!--
+                    <p:menuitem value="More Details" icon="ui-icon-pencil">
+                            <f:setPropertyActionListener value="#{ord}" target="#{orders.selectedOrder}" />
+                    </p:menuitem>
+                    <p:separator rendered="#{ord.statusId == '1'}"/>
+                    <p:menuitem value="Submit Order" rendered="#{ord.statusId == '1'}" update=":form1:submitform:submitordergrid" oncomplete="ordersubmitform.show();" icon="ui-icon-cart">
+                            <f:setPropertyActionListener value="#{ord}" target="#{orders.selectedOrder}" />
+                    </p:menuitem>
+                    -->
+                    <p:separator rendered="#{navigation.marketer}"/>
+                    <p:menuitem value="Process Order" process="@this" rendered="#{navigation.marketer}" icon="ui-icon-circle-plus" oncomplete="PF('ordersubmitform').show();" update=":form1:submitform:submitordergrid" style="margin:0 auto;" >
+                        <f:setPropertyActionListener value="#{ord}" target="#{orders.selectedOrder}" />
+                    </p:menuitem>
+                    <p:separator/>
+                    <p:menuitem value="Download Order" process="@this" action="#{navigation.getUrl(ord.reportLink)}" icon="ui-icon-image" style="margin:0 auto;" >
+                        <f:setPropertyActionListener value="#{ord}" target="#{orders.selectedOrder}" />
+                    </p:menuitem>
+                    <p:menuitem value="Download report" process="@this" action="#{reportPDF.printPDF}" icon="ui-icon-image" style="margin:0 auto;" >
+                        <f:setPropertyActionListener value="#{ord}" target="#{orders.selectedOrder}" />
+                    </p:menuitem>
+                </p:menuButton>
+            </p:column>      
+        </p:dataTable> 
+        <p:commandButton value="Export Table as PDF" ajax="false" >
+            <p:dataExporter type="pdf" target="orderlistId" fileName="stopReport"/>
+        </p:commandButton>
+        <p:commandLink value="download report" process="@this" actionListener="#{reportPDF.printPDF()}" ajax="false" />
+        <p:commandButton value="download PDF" actionListener="#{reportPDF.printPDF()}"  ajax="false" ></p:commandButton>
+
+    </h:form>
+    <p:dialog widgetVar="ordersubmitform" modal="true" appendTo="@(Body)" header="Order Submition Form">
+
+        <h:form id="submitform">
+            <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+            <h:panelGrid id="submitordergrid" columns="2" cellspacing="15">
+                <f:facet name="header">
+                    <h:outputText value="Fuel Ordering Form" />
+                    <p:separator />
+                </f:facet>
+                <h:outputText value="Product Code:" />
+                <h:outputText value="#{orders.selectedOrder.productCode}" />
+                <h:outputText value="Product Name:" />
+                <h:outputText value="#{orders.selectedOrder.productName}" />
+                <h:outputText value="Deport:" />
+                <h:outputText value="#{orders.selectedOrder.locationName}" />
+                <h:outputText value="Product Price:" />
+                <h:outputText value="#{orders.selectedOrder.orderPrice}" />
+                <h:outputText value="Qty in Ltr:" />
+                <h:outputText value="#{orders.selectedOrder.lrts}" />
+
+                <h:outputText value="Total Amount:" />
+                <h:outputText value="#{orders.selectedOrder.totalAmount}" />
+
+                <h:outputText value="Order Date:" />
+                <h:outputText value="#{orders.selectedOrder.orderDate}" />
+
+                <h:outputText value="Order Time:" />
+                <h:outputText value="#{orders.selectedOrder.orderTime}" />
+
+                <h:outputText value="Order By:" />
+                <h:outputText value="#{orders.selectedOrder.fullName}" />
+
+                <h:outputText value="Order Details:" />
+                <h:outputText value="#{orders.selectedOrder.orderDetails}" />
+                <f:facet name="footer">
+                    <div align="center">
+                        <!--<h:form>-->
+                        <p:separator />
+                        <p:commandButton icon="ui-icon-cart" rendered="#{orders.selectedOrder.statusId == 1}" process="@this" actionListener="#{orders.selectedOrder.acceptOrder()}" value="Accept Order" update=":form1:growl, :form1:orders:orderlistId" />
+                        <p:commandButton  icon="ui-icon-cart" rendered="#{orders.selectedOrder.statusId == 1}" process="submitform" actionListener="#{orders.selectedOrder.declineOrder()}" value="Decline Order" update=":form1:growl, :form1:orders:orderlistId" />
+                        <p:commandButton icon="ui-icon-close" value="Close" oncomplete="PF('ordersubmitform').hide();" />
+                        <!--</h:form>-->
+                    </div>
+                </f:facet>
+            </h:panelGrid>
+        </h:form>
+    </p:dialog>
+
+</html>
+

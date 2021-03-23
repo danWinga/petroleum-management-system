@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+      
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+        .ui-widget,
+        .ui-widget .ui-widget {
+            font-size: 12px !important;      
+        }
+        
+    </style>
+    <h:head><title>.::Blue Technologies Ltd</title></h:head>
+<!--    
+    <p:ajaxStatus onstart="statusDialog.show();" onsuccess="statusDialog.hide();"/>  
+              
+    <p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false">  
+            <p:graphicImage value="/images/loading.gif" />  
+    </p:dialog>
+-->    
+    <h:body style="background-color: #ccc;">
+            <h:form id="form1">
+                    <p:growl id="growl" showDetail="true" sticky="false" life="15000" />
+<!--                    <p:idleMonitor timeout="600000" onidle="idleDialog.show()" onactive="idleDialog.hide()"/>  -->
+                    <p:dialog header="Advertisment" resizable="false" widgetVar="idleDialog" modal="true"> <!-- width="520"> -->
+                            <p:graphicImage width="32" height="32" value="/images/fuel-tanker.png" alt="Image Description for" title="LMIS"/> 
+                    </p:dialog>
+
+                    <h:form id="form2">
+                            <center>
+                                    <p:panel style="width:  300px ; margin-top: 10%; bottom: auto;" rendered="#{not simplelogin.display}">
+                                            <h:panelGrid columns="1" >
+                                                    <p:graphicImage height="70" width="135" value="/images/logo3.jpg" style="float: none;"/>
+                                            </h:panelGrid>
+                                            <h:panelGrid columns="2" cellpadding="5">
+                                                    <p:graphicImage value="/images/login.png" alt="Image Description for" title="login"/>
+                                                    <h:outputLabel style="font-weight:bolder; color:red;" value="LOGIN" />
+                                                    <h:outputLabel value="Username:" /><p:inputText value="#{simplelogin.username}" required="true" requiredMessage="Please Enter username!" label="username" />
+                                                    <h:outputLabel value="Password:" /><h:inputSecret value="#{simplelogin.password}" required="true" requiredMessage="Please Enter password!" label="password" />
+                                                    <f:facet name="footer">
+                                                            <p:commandButton update=":form1:growl" icon="ui-icon-key" id="loginButton" type="submit" value="Login" actionListener="#{simplelogin.login}"/>
+                                                    </f:facet>
+                                            </h:panelGrid>
+
+                                    </p:panel>
+                            </center>
+                    </h:form>
+
+
+
+                    <p:layout fullPage="true" rendered="#{simplelogin.display}">
+                            <p:layoutUnit position="north" size="12%" >
+                                        <p:graphicImage height="70" width="135" value="/images/logo3.jpg" alt="Image Description for" title="Blue Technologies" style="padding-left: 45%" />
+                            </p:layoutUnit>
+                        
+                            <p:layoutUnit position="south" size="10%" style="border: 0px;">
+                                    <p:graphicImage height="64" value="/images/totalkenya.jpg" alt="Image Description for" title="Blue Technologies" style="padding-left: 35%"/> 
+                            </p:layoutUnit>
+
+                            <p:layoutUnit position="west" size="13%" header="MENU" resizable="false" closable="false" collapsible="false">
+                                    <ui:include id="menid" src="/templete/menu.xhtml" />
+                            </p:layoutUnit>
+
+                            <p:layoutUnit position="east" size="30%" resizable="false" closable="false" collapsible="false">                               
+<!--                                    <ui:include id="menid" src="/templete/dashboard.xhtml" /> -->
+                                        <p:panel id="chatPanel" style="border: 0px;" >
+                                                <ui:include src="#{navigation.graphName}.xhtml" />
+                                        </p:panel>
+                            </p:layoutUnit>
+                            
+                            <p:layoutUnit position="center" id="centerPanelx">
+                                    <p:panel id="centerPanel" style="height: 48%; border: 0px;" >
+                                            <ui:include src="#{navigation.pageName}.xhtml" />
+                                    </p:panel>
+                            </p:layoutUnit>
+                    </p:layout>
+            </h:form>
+    </h:body>
+</html>
+

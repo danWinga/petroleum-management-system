@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+      
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <style type="text/css">
+                .ui-widget,
+                .ui-widget .ui-widget {
+                       font-size: 12px !important;
+                 }
+        </style>
+    
+        <p:accordionPanel id="menuTab" >
+                <p:tab title="Quick Options">
+                        <p:menu style="background:white; border:0;" >
+                                <!--<p:menuitem value="Home" actionListener="#{navigation.doNav}" action="#{locations.refresh()}" update=":form1:centerPanel, :form1:chatPanel" icon="ui-icon-home">-->
+                                <p:menuitem value="Home" actionListener="#{navigation.doNav}" update=":form1:centerPanel, :form1:chatPanel" icon="ui-icon-home" >  
+                                        <f:param name="test" value="/templete/board" />
+                                        <f:param name="graph" value="/reports/products" />
+                                </p:menuitem>
+                                <p:separator/> 
+                                <p:menuitem value="Pricing" rendered="#{navigation.roleID}" actionListener="#{navigation.doNav}" update=":form1:centerPanel, :form1:chatPanel" icon="ui-icon-tag" >  
+                                        <f:param name="test" value="/prices/prices" />
+                                        <f:param name="graph" value="/prices/trends" />
+                                </p:menuitem>
+
+                                <p:separator rendered="#{navigation.roleID}" />
+                                <p:menuitem value="Orders" actionListener="#{navigation.doNav}" action="#{orders.refresh()}" update=":form1:centerPanel, :form1:chatPanel" icon="ui-icon-cart" >  
+                                        <f:param name="test" value="/orders/orders" />
+                                        <f:param name="graph" value="/prices/trends" />
+                                </p:menuitem>
+                                <p:separator/>
+                        </p:menu>
+                </p:tab>
+
+                <p:tab rendered="#{navigation.admin}" title="Settings">  
+                        <p:menu style="background:white; border:0;">  
+                                <p:menuitem value="Products" actionListener="#{navigation.doNav}" update=":form1:centerPanel, :form1:chatPanel" icon="ui-icon-cart">
+                                        <f:param name="test" value="/products/products" />
+                                        <f:param name="graph" value="/prices/trends" />
+                                </p:menuitem>
+                                <p:separator/>
+                                <p:menuitem value="Locations" actionListener="#{navigation.setPageName('/locations/locations')}" update=":form1:centerPanel" icon="ui-icon-arrow-4-diag">
+                                    
+                                </p:menuitem>
+                                <p:separator/>
+                                <p:menuitem value="Marketers" actionListener="#{navigation.setPageName('/marketers/marketers')}" update=":form1:centerPanel" icon="ui-icon-note">
+                                        <f:param name="test" value="/marketers/marketers" />
+                                </p:menuitem>
+                                <p:separator/>
+                                <p:menuitem value="Users" actionListener="#{navigation.setPageName('/users/users')}" update=":form1:centerPanel" icon="ui-icon-person">
+                                
+                                </p:menuitem>
+                                <p:separator/> 
+                        </p:menu>
+                </p:tab>  
+                <!--
+                <p:tab title="Reports">
+                        <p:menu style="background:white; border:0;">                    
+                                <p:menuitem value="Reports" actionListener="#{navigation.getUrl}" action="#{navigation.setPageName('/reports/desk')}" update=":form1:centerPanel" icon="ui-icon-note">
+                                        <f:param name="test" value="/reports/report" />
+                                </p:menuitem>
+                                <p:separator/>
+                                <p:menuitem value="Statistics" action="#{navigation.doNav}" update=":form1:centerPanel, :form1:chatPanel" icon="ui-icon-calculator">
+                                        <f:param name="test" value="/statistics/statistics" />
+                                        <f:param name="graph" value="/reports/1" />
+                                </p:menuitem>  
+                                <p:separator/> 
+                        </p:menu>
+                </p:tab>
+                -->
+                <p:tab title="System">
+                        <p:menu style="background:white; border:0;">
+                                <!--
+                                <p:menuitem value="My profile" icon="ui-icon-person" />  
+                                <p:separator/>                                 
+                                <p:menuitem value="My Diary" action="#{navigation.doNav}" actionListener="#{navigation.getUrl}" update=":form1:centerPanel, :form1:chatPanel" icon="ui-icon-person">
+                                        <f:param name="test" value="/Diary/diary" />
+                                        <f:param name="graph" value="/prices/trends" />
+                                </p:menuitem>
+                                <p:separator/> 
+                                -->
+                                <p:menuitem value="Logout" update=":form1:growl" actionListener="#{simplelogin.logout}" icon="ui-icon-power"/>
+                                <p:separator/>
+                        </p:menu>
+                </p:tab>
+        </p:accordionPanel>
+</html>

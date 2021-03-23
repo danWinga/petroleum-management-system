@@ -1,0 +1,273 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:p="http://primefaces.org/ui">
+      
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <style type="text/css">
+                .ui-widget,
+                .ui-widget .ui-widget {
+                       font-size: 12px !important;
+                 }
+                .ui-panelgrid td, .ui-panelgrid tr {
+                        border-style: none !important;
+                        background-color: transparent !important; 
+                        vertical-align: middle !important; 
+                }
+                
+                .ui-wizard {
+                        margin:0;
+                        padding:0;
+                }
+
+                .ui-wizard-content {
+                        margin:3px 0;
+                }
+
+                .ui-wizard-navbar {
+                        text-align: right;
+                }
+
+                .ui-wizard-nav-back, 
+                .ui-wizard-nav-next {
+                        cursor: pointer;
+                }
+
+                .ui-wizard-nav-back {
+                        float:left;
+                }
+
+                .ui-wizard-nav-next {
+                        float:right;
+                }
+
+                .ui-wizard-step-title {
+                    font-size: 12px;
+                    margin:0 3px 0 0;
+                    padding:0.4em;
+                    float:left;
+                }
+
+        </style>
+
+        <p:dataGrid id="cars" rendered="#{navigation.roleID}" var="locationlist" value="#{locations.locationList}" columns="3" rows="12" paginator="true"
+                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                rowsPerPageTemplate="6,12,18,24,30,36,40,46,52,58">
+                <f:facet name="header">
+                        <h:outputText value="CURRENT PRODUCT PRICE SUMMARIES IN VARIOUS LOCATIONS"/>
+                </f:facet>
+                <p:column>
+                        <p:panel id="pnl" header="#{locationlist.locationName}" style="text-align:center; border: 0;">
+                                <h:panelGrid columns="1" style="width:100%;">
+                                        <p:chart type="bar" model="#{locationlist.categoryModel}" style="height:150px; width: 200px;" /> 
+                                </h:panelGrid>
+                        </p:panel>
+                </p:column>
+        </p:dataGrid>
+
+        <p:dataGrid id="marketers" rendered="#{not navigation.roleID}" var="marketerlist" value="#{marketers.marketerList}" columns="3" rows="12" paginator="true"
+                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                rowsPerPageTemplate="6,12,18,24,30,36,40,46,52,58">
+                <f:facet name="header">
+                        <h:outputText value="LIST OR MARKETER"/>
+                </f:facet>
+                <p:column>
+                        <p:panel id="pnl" header="#{marketerlist.marketername}" style="text-align:center">
+                                <h:panelGrid columns="1" style="width:100%">
+                                        <p:commandLink id="marketerlink" actionListener="#{prices.productPrices()}" update=":form1:panelgrd, :form1:d44444" oncomplete="PF('prices').show();">
+                                                <p:graphicImage height="70" width="100" value="DisplayImage?id=#{marketerlist.marketerId}" />
+                                                <f:param name="marketerid" value="#{marketerlist.marketerId}" />
+                                        </p:commandLink>
+                                    <p:tooltip for="marketerlink" value="Click Here to view fuel Prices for #{marketerlist.marketername}" />
+                                </h:panelGrid>
+                        </p:panel>
+                </p:column>
+        </p:dataGrid>
+        
+        <p:dialog widgetVar="prices" modal="true" position="top" dynamic="true" appendTo="@(body)" header="Product Price by Location" width="720">                
+                <p:panelGrid id="panelgrd" columns="3" >
+                        <h:form id="pricefilterform">
+                                <p:panelGrid columns="5" >
+                                        <h:outputText value="Product:" />
+                                        <p:selectOneMenu value="#{prices.productId}">
+                                                <f:selectItem itemLabel="--Select Product--" itemValue="0" />
+                                                <f:selectItems value="#{comboboxes.products}"/>
+                                        </p:selectOneMenu>
+                                        <h:outputText value="Location:" />
+                                        <p:selectOneMenu value="#{prices.locationId}">
+                                                <f:selectItem itemLabel="--Select Location--" itemValue="0" />
+                                                <f:selectItems value="#{comboboxes.locations}"/>
+                                        </p:selectOneMenu>
+                                        <p:commandButton process="pricefilterform" icon="ui-icon-search" actionListener="#{prices.productFilter}" update=":form1:d44444" value="Search" />
+                                </p:panelGrid>
+                        </h:form>
+                        <p:graphicImage height="70" width="100" value="DisplayImage?id=#{prices.marketerId}" />
+                </p:panelGrid>
+                    
+                <p:separator/>
+                <p:dataTable var="prz" value="#{prices.priceList}" id="d44444" paginator="true" rows="10" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} 
+                             {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" widgetVar="przTable" 
+                             filteredValue="#{prices.filteredPrice}" >
+                            <f:facet name="header">  
+                                    <p:outputPanel>  
+                                            <h:outputText value="Product Prices" />
+                                    </p:outputPanel>  
+                            </f:facet> 
+                            <p:column style="width:5%">  
+                                    <h:outputText styleClass="ui-icon ui-icon-tag" />  
+                            </p:column>                 
+                            <p:column style="width:15%" headerText="Code" footerText="Code">  
+                                    <h:outputText value="#{prz.productcode}" /> 
+                            </p:column>  
+                            <p:column sortBy="#{prz.productname}" headerText="Product" footerText="Product">  
+                                    <h:outputText value="#{prz.productname}" />  
+                            </p:column>
+                            <p:column sortBy="#{prz.locationname}" headerText="Location" footerText="Location">  
+                                    <h:outputText value="#{prz.locationname}" />  
+                            </p:column>  
+                            <p:column style="width:15%" sortBy="#{prz.stocked}" headerText="In Stock" footerText="In Stock"> 
+                                    <h:outputText value="#{prz.stocked}" />
+                            </p:column>  
+                            <p:column style="width:15%; text-align: center;" sortBy="#{prz.price}" headerText="Price" footerText="Price">  
+                                    <h:outputText value="#{prz.price}" />
+                            </p:column>
+                            <p:column headerText="Order" style="width:7%" footerText="Order">  
+                                    <p:commandLink styleClass="ui-icon ui-icon-cart" update=":form1:sendorder:ordergrid" oncomplete="PF('orderform').show(), PF('prices').hide();">
+                                            <f:setPropertyActionListener value="#{prz}" target="#{prices.selectedPrice}" />
+                                    </p:commandLink>
+                            </p:column>      
+                </p:dataTable> 
+        </p:dialog>
+        
+        <p:dialog widgetVar="orderform" modal='true' appendTo="@(body)" header="Fuel Order Process" width="720"> <!-- height="350" >-->
+                <h:form id="sendorder">
+                        <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+                        <p:wizard flowListener="#{prices.selectedPrice.onFlowProcess}">
+                                <p:tab id="fuel" title="Fuel Details">
+                                        <h:panelGrid id="ordergrid" columns="2" cellspacing="15">
+                                                <f:facet name="header">
+                                                        <h:outputText value="Fuel Ordering Form" />
+                                                        <p:separator />
+                                                </f:facet>
+                                                <h:outputText value="Product Code:" />
+                                                <h:outputText value="#{prices.selectedPrice.productcode}" />
+                                                <h:outputText value="Product Name:" />
+                                                <h:outputText value="#{prices.selectedPrice.productname}" />
+                                                <h:outputText value="Deport:" />
+                                                <h:outputText value="#{prices.selectedPrice.locationname}" />
+                                                <h:outputText value="Product Price:" />
+                                                <h:outputText value="#{prices.selectedPrice.price}" />
+
+                                                <h:outputText value="Qty in Ltr:" />
+                                                <h:panelGrid rendered="#{prices.selectedPrice.instock}" columns="2">
+                                                        <p:inputText size="10" value="#{prices.selectedPrice.litres}">
+                                                                <p:ajax update="out" listener="#{prices.selectedPrice.increment}" event="keyup" />
+                                                        </p:inputText>
+                                                        <h:outputText value=" X 1000" />
+                                                </h:panelGrid>
+                                                <h:outputText style=" color: red; font-weight: bolder" rendered="#{not prices.selectedPrice.instock}" value="OUT OF STOCK" />
+                                                <h:outputText rendered="#{prices.selectedPrice.instock}" value="Total Amount:" />
+                                                <h:outputText style=" color: red; font-weight: bolder" rendered="#{prices.selectedPrice.instock}" id="out" value="#{prices.selectedPrice.amount}" />
+                                        </h:panelGrid>
+                                </p:tab>
+                                <p:tab id="notes" title="Order Information">
+                                        <h:panelGrid id="ordernote" columns="1" cellspacing="18">
+                                                <f:facet name="header">
+                                                        <h:outputText value="More Info to Marketer" />
+                                                        <p:separator />
+                                                </f:facet>
+                                                <h:outputText value="Notes:" />
+                                                <h:inputTextarea id="details" value="#{prices.selectedPrice.notes}" rows="8" cols="90"/>
+                                        </h:panelGrid>
+                                </p:tab>
+                                <p:tab id="orderconfirm" title="Order Confirmation">
+                                        <h:panelGrid columns="2" cellspacing="5">
+                                                <h:panelGrid columns="2" cellspacing="18">
+                                                        <h:outputText value="Product Code:" />
+                                                        <h:outputText value="#{prices.selectedPrice.productcode}" />
+                                                        <h:outputText value="Product Name:" />
+                                                        <h:outputText value="#{prices.selectedPrice.productname}" />
+                                                        <h:outputText value="Deport:" />
+                                                        <h:outputText value="#{prices.selectedPrice.locationname}" />
+                                                        <h:outputText value="Product Price:" />
+                                                        <h:outputText value="#{prices.selectedPrice.price}" />
+                                                        <h:outputText value="Qty in Ltr:" />
+                                                        <h:outputText value="#{(prices.selectedPrice.litres) * 1000}"/>
+                                                        <h:outputText rendered="#{prices.selectedPrice.instock}" value="Total Amount:" />
+                                                        <h:outputText value="#{prices.selectedPrice.amount}" />
+                                                </h:panelGrid>
+                                                <h:panelGrid columns="1">
+                                                        <h:inputTextarea readonly="true" value="#{prices.selectedPrice.notes}" rows="10" cols="50"/>
+                                                        <p:commandButton icon="ui-icon-check" process="sendorder" oncomplete="PF('orderform').hide()" actionListener="#{prices.selectedPrice.placeOrder()}" value="Process Order" update=":form1:growl" />
+                                                </h:panelGrid>
+                                        </h:panelGrid>
+                                    
+                                </p:tab>
+                        </p:wizard>
+                </h:form>
+        </p:dialog>
+        
+        <p:dialog widgetVar="orderformX" modal="true" appendTo="@(body)" header="Fuel Order Form">
+                <p:messages id="messagesX" showDetail="true" autoUpdate="true" closable="true" />
+                <h:form id="sendorderX">
+                    <h:panelGrid id="ordergridX" columns="2" cellspacing="20">
+                                <f:facet name="header">
+                                        <h:outputText value="Fuel Ordering Form" />
+                                        <p:separator />
+                                </f:facet>
+                                <h:outputText value="Product Code:" />
+                                <h:outputText value="#{prices.selectedPrice.productcode}" />
+                                <h:outputText value="Product Name:" />
+                                <h:outputText value="#{prices.selectedPrice.productname}" />
+                                <h:outputText value="Deport:" />
+                                <h:outputText value="#{prices.selectedPrice.locationname}" />
+                                <h:outputText value="Product Price:" />
+                                <h:outputText value="#{prices.selectedPrice.price}" />
+                                
+                                <h:outputText value="Qty in Ltr:" />
+                                <h:panelGrid rendered="#{prices.selectedPrice.instock}" columns="2">
+                                        <h:inputText size="10" value="#{prices.selectedPrice.litres}">
+                                                <p:ajax update="outX" listener="#{prices.selectedPrice.increment}" event="keyup" />
+                                        </h:inputText>
+                                        <h:outputText value=" X 1000" />
+                                </h:panelGrid>
+                                <h:outputText style=" color: red; font-weight: bolder" rendered="#{not prices.selectedPrice.instock}" value="OUT OF STOCK" />
+                                <h:outputText rendered="#{prices.selectedPrice.instock}" value="Total Amount:" />
+                                <h:outputText style=" color: red; font-weight: bolder" rendered="#{prices.selectedPrice.instock}" id="outX" value="#{prices.selectedPrice.amount}" />
+                                <f:facet name="footer">
+                                        <div align="center">
+                                                <p:separator />
+                                                <p:commandButton icon="ui-icon-check" process="sendorderX" oncomplete="PF('orderform').hide(), PF('notesform').show()" actionListener="#{prices.selectedPrice.placeOrder()}" value="Ok" update=":form1:growl" />
+                                                <p:commandButton icon="ui-icon-close" value="Close" oncomplete="PF('orderform').hide();" />
+                                        </div>
+                                </f:facet>
+                        </h:panelGrid>
+                </h:form>
+        </p:dialog>
+        
+        
+        <p:dialog widgetVar="notesformX" modal="true" appendTo="@(body)" header="Fuel Order Form">
+                <p:messages showDetail="true" autoUpdate="true" closable="true" />
+                <h:form id="sendnoteX">
+                        <h:panelGrid id="ordernote" columns="1" cellspacing="20">
+                                <f:facet name="header">
+                                        <h:outputText value="More Info to Marketer" />
+                                        <p:separator />
+                                </f:facet>
+                                <h:outputText value="Notes:" />
+                                <h:inputTextarea id="details" value="#{prices.selectedPrice.notes}" rows="8" cols="60"/>
+                                
+                                <f:facet name="footer">
+                                        <div align="center">
+                                                <p:separator />
+                                                <p:commandButton icon="ui-icon-cart" process="sendnoteX" actionListener="#{prices.selectedPrice.updateOrder()}" oncomplete="PF('notesform').hide();" value="Order Now" update=":form1:growl" />
+                                                <p:commandButton icon="ui-icon-close" value="Close" oncomplete="PF('notesform').hide();" />
+                                        </div>
+                                </f:facet>
+                        </h:panelGrid>
+                </h:form>
+        </p:dialog>
+</html>

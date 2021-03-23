@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+      
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+        .ui-widget,
+        .ui-widget .ui-widget {
+               font-size: 12px !important;
+         }
+    </style>
+
+    <p:dataTable var="productlist" value="#{products.productList}" id="dt333"
+            paginator="true" rows="50" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+            rowsPerPageTemplate="10,20,30,40,50,60,70,80,100," widgetVar="carsTable">
+
+                <f:facet name="header">  
+                        <p:outputPanel>
+                            <h:outputText value="Products" />
+                            <p:separator/>
+                            <div align="right">
+                                <p:commandButton value="New Product" onclick="PF('locdlg2').show();" />
+                            </div>
+                        </p:outputPanel>
+                </f:facet>
+                    
+                <p:column style="width:10%">  
+                        <h:outputText id="dragIcon" styleClass="ui-icon ui-icon-cart" />  
+                </p:column> 
+                <p:column id="productcode" style="width:35%" headerText="Product Code" footerText="Product Code">  
+                        <h:outputText value="#{productlist.productCode}" /> 
+                </p:column>  
+                <p:column id="productname" style="width:35%" headerText="Product Name" footerText="Product Name">  
+                        <h:outputText value="#{productlist.productName}" />  
+                </p:column>  
+                <p:column id="edit" headerText="Edit" style="width:10%" footerText="Edit">  
+                        <p:commandLink id="selectButton4" styleClass="ui-icon ui-icon-pencil" update=":form1:editproductform:editproductgrid" oncomplete="PF('locdlg1').show();">
+                                <f:setPropertyActionListener value="#{productlist}" target="#{products.selectedProduct}" />
+                        </p:commandLink>
+                </p:column>  
+                <p:column id="delete" headerText="Delete" style="width:10%" footerText="Delete">  
+                        <p:commandLink id="selectButton5" styleClass="ui-icon ui-icon-trash" update=":form1:deleteproductform:deleteproductgrid" oncomplete="PF('locdlg3').show();">
+                                <f:setPropertyActionListener value="#{productlist}" target="#{products.selectedProduct}" />
+                        </p:commandLink>
+                </p:column>  
+    </p:dataTable>
+
+    <p:dialog header="Edit Product" widgetVar="locdlg1" dynamic="true" showEffect="bounce" hideEffect="clip" resizable="false"> <!-- width="300" height="150">  -->
+            <p:graphicImage width="32" height="32" value="/images/fuel-tanker.png" alt="Image Description for" title="Blue Technologies"/> 
+            <p:separator/>
+            <h:form id="editproductform">
+                <h:panelGrid id="editproductgrid" columns="2" cellpadding="5">                  
+                        <h:outputText value="Code:" />
+                        <h:inputText id="facilitycode" value="#{products.selectedProduct.productCode}" />
+                        <h:outputText value="Name:" />
+                        <h:inputText id="facilityname" value="#{products.selectedProduct.productName}" />
+                        <h:outputText value="Details:" />
+                        <h:inputTextarea id="details" value="#{products.selectedProduct.details}" rows="4" cols="40"/>
+                        <f:facet name="footer">  
+                            <p:separator/>
+                            <div align="right">
+                                <p:commandButton  process="editproductform" id="loginButton" icon="ui-icon-disk" value="Save" actionListener="#{products.selectedProduct.updateProduct}" update=":form1:dt333" oncomplete="PF('locdlg1').hide();"/>
+                                <p:commandButton value="Close" icon="ui-icon-close" oncomplete="PF('locdlg1').hide();"/>
+                            </div>
+                        </f:facet>
+                </h:panelGrid>
+            </h:form>
+    </p:dialog>
+    
+    <p:dialog header="New Product" widgetVar="locdlg2" dynamic="true" showEffect="bounce" hideEffect="clip" resizable="false"> <!-- width="300" height="150">  -->
+            <p:graphicImage width="32" height="32" value="/images/fuel-tanker.png" alt="Image Description for" title="Blue Technologies"/> 
+            <p:separator/>
+            <h:form id="newproductform">
+                    <h:panelGrid id="newproductgrid" columns="2" cellpadding="5">                  
+                            <h:outputText value="Code:" />
+                            <h:inputText id="facilitycode" value="#{newproduct.productCode}" />
+                            <h:outputText value="Name:" />
+                            <h:inputText id="facilityname" value="#{newproduct.productName}" />
+                            <h:outputText value="Details:" />
+                            <h:inputTextarea id="details" value="#{newproduct.details}" rows="4" cols="40"/>
+                            <f:facet name="footer">  
+                                <p:separator/>
+                                <div align="right">
+                                    <p:commandButton  process="newproductform" id="newButton" icon="ui-icon-disk" value="Save" actionListener="#{newproduct.newProduct}" update=":form1:dt333" oncomplete="PF('locdlg2').hide();"/>
+                                    <p:commandButton value="Close" icon="ui-icon-close" oncomplete="PF('locdlg2').hide();"/>
+                                </div>
+                            </f:facet>
+                    </h:panelGrid>
+            </h:form>
+    </p:dialog>
+    
+    <p:dialog header="Delete Product" widgetVar="locdlg3" dynamic="true" showEffect="bounce" hideEffect="clip" resizable="false"> <!-- width="300" height="150">  -->
+            <p:graphicImage width="32" height="32" value="/images/fuel-tanker.png" alt="Image Description for" title="Blue Technologies"/> 
+            <p:separator/>
+            <h:form id="deleteproductform">
+                <h:panelGrid id="deleteproductgrid" >                  
+                    <h:outputText value="Are you sure you want to delete?" />
+                    <f:facet name="footer">  
+                        <p:commandButton  process="deleteproductform" id="loginButton" icon="ui-icon-trash" value="Delete" actionListener="#{products.selectedProduct.deleteProduct}" update=":form1:dt333" oncomplete="PF('locdlg3').hide();"/>
+                        <p:commandButton value="Close" icon="ui-icon-close" oncomplete="PF('locdlg3').hide();"/>
+                    </f:facet>
+                </h:panelGrid>
+            </h:form>
+    </p:dialog>
+
+</html>
+

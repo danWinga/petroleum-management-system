@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+      
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" accept-charset="utf-8" />
+    <style type="text/css">
+        .ui-widget,
+        .ui-widget .ui-widget {
+               font-size: 12px !important;
+         }
+    </style>
+
+    <p:dataTable var="mail" value="#{mailbox.mails}" paginator="true" rows="10"
+            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+            <f:facet name="header">  
+                    <p:outputPanel>  
+                            <h:outputText value="Emails" />
+                    </p:outputPanel>  
+            </f:facet> 
+            <p:column style="width:5%">  
+                <h:outputText id="dragIcon" styleClass="ui-icon ui-icon-mail-closed" />  
+            </p:column> 
+            <p:column style="width:20%" headerText="From" sortBy="#{mail.from}">
+                    #{mail.from}
+            </p:column>
+            <p:column style="width:50%" headerText="Subject" sortBy="#{mail.subject}">
+                    #{mail.subject}
+            </p:column>
+            <p:column style="width:15%" headerText="Date" sortBy="#{mail.date}">
+                    #{mail.date}
+            </p:column>
+            <p:column style="width:10%" headerText="View Mail">
+                    <p:commandLink update=":form1:mailViewer, :form1:mailreply" styleClass="ui-icon ui-icon-search" title="View">
+                            <f:setPropertyActionListener value="#{mail}" target="#{mailbox.selectedMail}" />
+                    </p:commandLink>
+            </p:column>
+    </p:dataTable>
+   
+    <p:separator/>
+
+    <p:outputPanel id="mailViewer" rendered="#{not empty mailbox.mails}" >
+            <h:panelGrid id="mailreply" columns="2">
+                    <p:commandButton value ="Reply" update=":form1:mailpanel" oncomplete="newmail.show();" icon="ui-icon ui-icon-arrowreturnthick-1-n" title="View">
+
+                    </p:commandButton>
+                    <p:commandButton value ="Delete" update="" icon="ui-icon ui-icon-trash" title="View">
+
+                    </p:commandButton>
+            </h:panelGrid>
+            <p:separator/>
+            <h:outputText escape="false" value="#{mailbox.selectedMail.stakename}"  />
+    </p:outputPanel>
+    
+    <p:dialog widgetVar="newmail" header="Compose Mail" showEffect="fade" hideEffect="fade">
+            <h:panelGrid id="mailpanel" columns="2" cellspacing="5">
+                        <h:outputLabel for="to" value="To: " />
+                        <p:inputText id="to" value="#{mailbox.selectedMail.from}" size="50"/>
+
+                        <h:outputLabel for="cc" value="CC: " />
+                        <p:inputText id="cc" value="" size="50"/>
+
+                        <h:outputLabel for="subject" value="Subject: " />
+                        <p:inputText id="subject" value="RE:#{mailbox.selectedMail.subject}" size="50"/>
+            </h:panelGrid>
+            <p:editor value="This is my editor" height="350" width="700"></p:editor>
+    </p:dialog>
+
+</html>

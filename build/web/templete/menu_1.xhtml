@@ -1,0 +1,91 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+      
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+        .ui-widget,
+        .ui-widget .ui-widget {
+               font-size: 12px !important;
+         }
+    </style>
+
+    <p:slideMenu style="width:100%;"> 
+            <p:menuitem value="Home" actionListener="#{navigation.doNav}" update="form1:centerPanel, form1:chatPanel" icon="ui-icon-home">
+                    <f:param name="test" value="/templete/board" />
+                    <f:param name="graph" value="/reports/products" />
+            </p:menuitem>
+            <p:separator /> 
+            <p:menuitem rendered="#{ not navigation.admin}" value="Mails" actionListener="#{navigation.setPageName('/mails/mails')}" update="form1:centerPanel" icon="ui-icon-folder-open" />
+            <p:submenu rendered="#{navigation.admin}" label="Admin" icon="ui-icon-gear">  
+                    <p:menuitem value="Users" actionListener="#{navigation.setPageName('/users/users')}" update="form1:centerPanel" icon="ui-icon-person" />  
+                    <p:menuitem value="Mails" actionListener="#{navigation.setPageName('/mails/mails')}" update="form1:centerPanel" icon="ui-icon-folder-open" />  
+                    <p:menuitem value="Statistics" actionListener="#{navigation.doNav}" update="form1:centerPanel, form1:chatPanel" icon="ui-icon-calculator">
+                            <f:param name="test" value="/statistics/statistics" />
+                            <f:param name="graph" value="/reports/report" />
+                    </p:menuitem>  
+            </p:submenu>  
+            <p:separator rendered="#{ not navigation.admin}" /> 
+            <p:menuitem rendered="#{ not navigation.admin}" value="Requests" actionListener="#{navigation.doNav}" update="form1:centerPanel, form1:chatPanel" icon="ui-icon-calculator">
+                    <f:param name="test" value="/statistics/statistics" />
+                    <f:param name="graph" value="/reports/report" />
+            </p:menuitem>
+            <p:separator rendered="#{ not navigation.admin}" /> 
+            <p:separator rendered="#{navigation.admin}"/> 
+            <p:submenu label="Requests" rendered="#{navigation.admin}" icon="ui-icon-transfer-e-w">  
+                    <p:menuitem value="Inbox" actionListener="#{navigation.doNav}" update="centerPanel, form1:chatPanel" icon="ui-icon-arrowreturnthick-1-e">
+                            <f:param name="test" value="/requests/inbox" />
+                            <f:param name="graph" value="/requests/inboxTrend" />
+                    </p:menuitem>
+                    <p:menuitem value="Outbox" actionListener="#{navigation.doNav}" update="centerPanel, form1:chatPanel" icon="ui-icon-arrowreturnthick-1-e">
+                            <f:param name="test" value="/requests/outbox" />
+                            <f:param name="graph" value="/requests/outboxTrend" />
+                    </p:menuitem>
+                    <p:menuitem value="Sent" actionListener="#{navigation.doNav}" update="centerPanel, form1:chatPanel" icon="ui-icon-arrowreturnthick-1-e">
+                            <f:param name="test" value="/requests/sent" />
+                            <f:param name="graph" value="/requests/smsdelivery" />
+                    </p:menuitem>
+            </p:submenu>                      
+            <p:separator rendered="#{navigation.admin}" /> 
+            <p:submenu rendered="#{navigation.admin}" label="Settings" icon="ui-icon-wrench">  
+                    <p:menuitem value="Products" actionListener="#{navigation.setPageName('/products/products')}" update="form1:centerPanel" icon="ui-icon-cart"/>
+                    <p:menuitem value="Locations" actionListener="#{navigation.setPageName('/locations/locations')}" update="form1:centerPanel" icon="ui-icon-arrow-4-diag">
+                    </p:menuitem>
+                    <p:menuitem value="Marketers" actionListener="#{navigation.setPageName('/marketers/marketers')}" update="centerPanel" icon="ui-icon-note">
+                            <f:param name="test" value="/marketers/marketers" />
+                    </p:menuitem>
+            </p:submenu>  
+            <p:separator rendered="#{navigation.admin}" /> 
+            <p:menuitem value="Pricing" action="#{navigation.doNav}" actionListener="#{navigation.getUrl}" update="form1:centerPanel, form1:chatPanel" icon="ui-icon-tag" >  
+                    <f:param name="test" value="/prices/prices" />
+                    <f:param name="graph" value="/prices/trends" />
+            </p:menuitem>
+            <p:separator /> 
+            <p:submenu label="Reports" icon="ui-icon-clipboard">  
+                    <p:menuitem value="Reports" actionListener="#{navigation.setPageName('/reports/report')}" update="centerPanel" icon="ui-icon-note"/>
+<!--                            <f:param name="test" value="/reports/report" /> 
+                    </p:menuitem> -->
+            </p:submenu>  
+            
+            <p:separator style="margin-top:5%"/>
+            <p:menuitem value="Logout" update=":form1:growl" actionListener="#{simplelogin.logout}" icon="ui-icon-power"/>
+    </p:slideMenu>  
+<!--
+            <p:accordionPanel>  
+                            <p:tab title="Administrator"></p:tab>  
+                            <p:tab title="Geographics"></p:tab>  
+                            <p:tab title="Facilities"></p:tab>  
+                            <p:tab title="Programs"></p:tab>  
+                            <p:tab title="Services"></p:tab>  
+                            <p:tab title="Tools"></p:tab>  
+                            <p:tab title="Commodities"></p:tab>  
+                            <p:tab title="Order Reports"></p:tab>  
+                            <p:tab title="Summary Reports"></p:tab>  
+            </p:accordionPanel>
+-->  
+</html>
+

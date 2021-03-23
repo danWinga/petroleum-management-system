@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+      
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+        .ui-widget,
+        .ui-widget .ui-widget {
+               font-size: 12px !important;
+         }
+    </style>
+    <h:form id="editprice">
+        <h:panelGrid id="display1" columns="2" cellpadding="5">                  
+
+                <h:outputText value="Code:" />
+                <h:outputText id="productcode" value="#{prices.selectedPrice.productcode}" />
+                
+                <h:outputText value="Name:" />
+                <h:outputText id="productname" value="#{prices.selectedPrice.productname}" />
+                
+                <h:outputText value="Marketer:" />
+                <h:outputText id="marketers" value="#{prices.selectedPrice.marketername}"/>
+                
+                <h:outputText value="Location:" />
+                <h:outputText id="productloc" value="#{prices.selectedPrice.locationname}" />
+                
+                <h:outputText value="Price:" />
+                <h:inputText id="price" size="40" value="#{prices.selectedPrice.price}" />
+                
+                <h:outputText value="Details:" />
+                <h:inputTextarea id="details" value="#{prices.selectedPrice.details}" rows="4" cols="40"/>
+                <f:facet name="footer">  
+                    <p:commandButton  process="editprice" id="loginButton" icon="ui-icon-disk" value="Save" actionListener="#{prices.selectedPrice.updateData}" update=":form1:d4444" oncomplete="PF('dlg5').hide();"/>
+                    <p:commandButton value="Close" icon="ui-icon-close" oncomplete="PF('dlg5').hide();"/>
+                </f:facet>
+        </h:panelGrid>
+    </h:form>
+</html>
+

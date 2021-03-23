@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+      
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+        .ui-widget,
+        .ui-widget .ui-widget {
+               font-size: 12px !important;
+         }
+    </style>
+    
+    <h:form id="prices">
+            <p:dataTable var="prz" value="#{prices.priceList}" id="d4444" paginator="true" rows="50" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                         rowsPerPageTemplate="10,20,30,40,50,60,70,80,100," widgetVar="przTable" editable="true" filteredValue="#{prices.filteredPrice}">
+                        <f:facet name="header">  
+                                <p:outputPanel>  
+                                    <h:outputText value="Product Prices" />
+                                    <p:separator/>
+                                    <div align="right">
+                                            <p:commandButton id="selectButton9" value="New Price" oncomplete="PF('dlg6').show();"/>
+                                    </div>
+                                </p:outputPanel>  
+                        </f:facet> 
+                        <p:ajax event="rowEdit" listener="#{prices.onEdit}" update=":form1:growl" />  
+                        <p:ajax event="rowEditCancel" listener="#{prices.onCancel}" update=":form1:growl" /> 
+                        <p:column style="width:5%">  
+                                <h:outputText styleClass="ui-icon ui-icon-tag" />  
+                        </p:column>                 
+                        <p:column style="width:10%" filterStyle="width:50px" filterMatchMode="contains" filterBy="#{prz.productcode}" sortBy="#{prz.productcode}" headerText="Code" footerText="Code">  
+                                <h:outputText value="#{prz.productcode}" /> 
+                        </p:column>  
+                        <p:column style="width:20%" filterMatchMode="contains" filterBy="#{prz.productname}" sortBy="#{prz.productname}" headerText="Product" footerText="Product">  
+                                <h:outputText value="#{prz.productname}" />  
+                        </p:column>
+                        <c:if test="#{navigation.admin == 'true'}">
+                                <p:column style="width:15%" filterMatchMode="contains" filterBy="#{prz.marketername}" sortBy="#{prz.marketername}" headerText="Marketer" footerText="Marketer">  
+                                        <h:outputText value="#{prz.marketername}" />  
+                                </p:column>  
+                        </c:if>
+                        <p:column style="width:15%" rendered="false" filterMatchMode="contains" filterBy="#{prz.locationcode}" sortBy="#{prz.locationcode}" headerText="Location Code" footerText="Location Code">  
+                                <h:outputText value="#{prz.locationcode}" />  
+                        </p:column>  
+                        <p:column style="width:13%" filterStyle="width:70px" filterMatchMode="contains" filterBy="#{prz.locationname}" sortBy="#{prz.locationname}" headerText="Location" footerText="Location">  
+                                <h:outputText value="#{prz.locationname}" />  
+                        </p:column>  
+                        <p:column style="width:22%; text-align: center;" filterMatchMode="equals" filterBy="#{prz.stocked}" sortBy="#{p.stocked}" headerText="In Stock" footerText="In Stock"> 
+                                <f:facet name="filter">
+                                        <p:selectOneButton onchange="PF('przTable').filter()">
+                                                <f:selectItem itemLabel="All" itemValue="" />
+                                                <f:selectItem itemLabel="Yes" itemValue="Yes" />
+                                                <f:selectItem itemLabel="No" itemValue="No" />
+                                        </p:selectOneButton>
+                                </f:facet>
+                                <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{prz.stocked}" /></f:facet>
+                                <f:facet name="input">
+                                    <!--<h:selectBooleanCheckbox value="#{prz.instock}" />-->
+                                    <p:selectBooleanButton id="value1" onIcon="ui-icon-check" offIcon="ui-icon-close" value="#{prz.instock}" onLabel="Yes" offLabel="No" style="width:60px" />
+                                </f:facet>
+                                </p:cellEditor>
+                        </p:column>  
+                        <p:column sortBy="#{prz.price}" style="text-align: right;" headerText="Price" footerText="Price">  
+                                <p:cellEditor>
+                                        <f:facet name="output"><h:outputText value="#{prz.price}" /></f:facet>  
+                                        <f:facet name="input"><p:inputText value="#{prz.price}" size="10" label="Price"/></f:facet>  
+                                </p:cellEditor>
+                        </p:column>
+
+                        <p:column rendered="#{not navigation.admin}" headerText="Edit" style="width:7%">  
+                                <p:rowEditor />  
+                        </p:column>
+                        <p:column headerText="Delete" style="width:7%" footerText="Delete">  
+                                <p:commandLink id="selectButton8" styleClass="ui-icon ui-icon-trash" oncomplete="dlg7.show();">
+                                        <f:setPropertyActionListener value="#{prz}" target="#{prices.selectedPrice}" />
+                                </p:commandLink>
+                        </p:column>      
+            </p:dataTable> 
+
+            <p:dialog header="Edit Price" widgetVar="dlg5" dynamic="true" showEffect="bounce" hideEffect="clip" resizable="false"> <!-- width="300" height="150">  -->
+                    <p:graphicImage width="32" height="32" value="/images/fuel-tanker.png" alt="Image Description for" title="Blue Technologies"/> 
+                    <p:separator/>
+                    <ui:include src="/prices/edit_price.xhtml" />
+            </p:dialog>  
+
+            <p:dialog header="New Price" widgetVar="dlg6" dynamic="true" showEffect="bounce" hideEffect="clip" resizable="false"> <!-- width="300" height="150">  -->
+                    <p:graphicImage width="32" height="32" value="/images/fuel-tanker.png" alt="Image Description for" title="Blue Technologies"/> 
+                    <p:separator/>
+                    <ui:include src="/prices/new_price.xhtml" />
+            </p:dialog>  
+
+            <p:dialog header="Delete Price" widgetVar="dlg7" dynamic="true" showEffect="bounce" hideEffect="clip" resizable="false"> <!-- width="300" height="150">  -->
+                    <p:graphicImage width="32" height="32" value="/images/fuel-tanker.png" alt="Image Description for" title="Blue Technologies"/> 
+                    <p:separator/>
+
+            </p:dialog>
+    </h:form>
+</html>
+
